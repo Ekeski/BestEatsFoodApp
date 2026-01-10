@@ -7,7 +7,7 @@ import Category from "./components/Category";
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   return (
-    <div>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-400">
       <Navbar onSearch={setSearchTerm} />
       <Hero />
       <HeadlineCards />

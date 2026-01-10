@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AiOutlineMenu,
   AiOutlineSearch,
@@ -8,17 +8,40 @@ import {
 import { BsFillCartFill, BsFillSaveFill } from "react-icons/bs";
 import { TbTruckDelivery } from "react-icons/tb";
 import { MdFavorite, MdHelp } from "react-icons/md";
-import { FaWallet, FaUserFriends } from "react-icons/fa";
+import { FaWallet, FaUserFriends, FaMoon, FaSun } from "react-icons/fa";
 
 export default function Navbar({ onSearch }) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (darkMode) {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    setDarkMode(true);
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem("theme", darkMode ? "dark" : "light");
+}, [darkMode]);
 
   return (
     <div className="max-w-[1640px] mx-auto flex justify-between items-center p-4">
       {/* Left side */}
       <div className="flex items-center">
-        <div onClick={()=> setIsMenuOpen(!isMenuOpen)}
-        className="cursor-pointer">
+        <div
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="cursor-pointer"
+        >
           <AiOutlineMenu size={30} />
         </div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">
@@ -46,14 +69,30 @@ export default function Navbar({ onSearch }) {
         <BsFillCartFill size={20} className="mr-2" /> Cart
       </button>
 
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="hidden md:flex items-center bg-gray-200 dark:bg-gray-700 rounded-full p-2 mx-4"
+      >
+        {darkMode ? <FaSun /> : <FaMoon />}
+      </button>
+
       {/* Mobile Menu */}
       {/* Overlay */}
-      {isMenuOpen ? <div className="bg-black/80 fixed w-full h-full z-10 top-0 left-0"></div> : ''}
+      {isMenuOpen ? (
+        <div className="bg-black/80 fixed w-full h-full z-10 top-0 left-0"></div>
+      ) : (
+        ""
+      )}
 
       {/* Side drawer menu */}
-      <div className={`fixed top-0 left-0 w-[300px] h-full bg-white z-10 duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <AiOutlineClose 
-            onClick={()=> setIsMenuOpen(!isMenuOpen)}
+      <div
+        className={`fixed top-0 left-0 w-[300px] h-full bg-white z-10 duration-300 ${
+          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <AiOutlineClose
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
           size={30}
           className="absolute right-4 top-4 cursor-pointer"
         />
