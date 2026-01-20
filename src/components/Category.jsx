@@ -7,7 +7,7 @@ export default function Category() {
       </h1>
 
       {/* Category */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 dark:text-black">
         {categories.map((category, index) => (
           <div key={index} className="bg-gray-100 rounded-lg p-4 flex justify-between items-center">
             <h2 className="font-bold sm:text-xl">{category.name}</h2>
