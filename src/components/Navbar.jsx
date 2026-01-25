@@ -135,7 +135,7 @@ export default function Navbar({ onSearch }) {
         {/* 🌙 Dark Mode Toggle for mobile view*/}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="flex items-center gap-3 p-3 rounded-md
+          className="flex md:hidden items-center gap-3 p-3 rounded-md
                   border-none dark:text-white mx-0 mt-4 "
         >
           {darkMode ? <FaSun /> : <FaMoon />}
