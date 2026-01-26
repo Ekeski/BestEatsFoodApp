@@ -7,15 +7,46 @@ import {
 } from "react-icons/ai";
 import { BsFillCartFill, BsFillSaveFill } from "react-icons/bs";
 import { TbTruckDelivery } from "react-icons/tb";
-import { MdFavorite, MdHelp } from "react-icons/md";
+import { MdFavorite, MdHelp, MdLogout } from "react-icons/md";
 import { FaWallet, FaUserFriends, FaMoon, FaSun } from "react-icons/fa";
+import Favorites from "./Favorites";
+import FAQ from "./FAQ";
+import Orders from "./Orders";
+import Wallet from "./Wallet";
+import Promotions from "./Promotions";
+import BestOne from "./BestOne";
+import InviteFriends from "./InviteFriends";
 
-export default function Navbar({ onSearch, cartItemsCount = 0, onCartClick }) {
+export default function Navbar({ onSearch, cartItemsCount = 0, onCartClick, favorites = [] }) {
   // State for mobile menu visibility
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // State for dark mode toggle
   const [darkMode, setDarkMode] = useState(false);
+
+  // State for favorites sidebar visibility
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+
+  // State for FAQ sidebar visibility
+  const [isFAQOpen, setIsFAQOpen] = useState(false);
+
+  // State for Orders sidebar visibility
+  const [isOrdersOpen, setIsOrdersOpen] = useState(false);
+
+  // State for Wallet sidebar visibility
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+
+  // State for Promotions sidebar visibility
+  const [isPromotionsOpen, setIsPromotionsOpen] = useState(false);
+
+  // State for BestOne sidebar visibility
+  const [isBestOneOpen, setIsBestOneOpen] = useState(false);
+
+  // State for InviteFriends sidebar visibility
+  const [isInviteFriendsOpen, setIsInviteFriendsOpen] = useState(false);
+
+  // State for favorites (will be updated from parent)
+  const [favoritesState, setFavoritesState] = useState(favorites);
 
   // Apply dark mode class to html element when darkMode changes
   useEffect(() => {
@@ -39,6 +70,11 @@ export default function Navbar({ onSearch, cartItemsCount = 0, onCartClick }) {
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
+
+  // Update favorites state when favorites prop changes
+  useEffect(() => {
+    setFavoritesState(favorites);
+  }, [favorites]);
 
   return (
     <div className="max-w-[1640px] mx-auto flex justify-between items-center p-4">
@@ -140,33 +176,85 @@ export default function Navbar({ onSearch, cartItemsCount = 0, onCartClick }) {
                 </span>
               )}
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsOrdersOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <TbTruckDelivery size={25} className="mr-4" /> Orders
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsFavoritesOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer relative"
+            >
               {" "}
               <MdFavorite size={25} className="mr-4" /> Favorite
+              {/* Favorites count badge */}
+              {favoritesState.length > 0 && (
+                <span className="ml-auto bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {favoritesState.length}
+                </span>
+              )}
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsWalletOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <FaWallet size={25} className="mr-4" /> Wallet
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsFAQOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <MdHelp size={25} className="mr-4" /> Help
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsPromotionsOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <AiFillTag size={25} className="mr-4" /> Promotions
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsBestOneOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <BsFillSaveFill size={25} className="mr-4" /> Best One
             </li>
-            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300">
+            <li 
+              onClick={() => {
+                setIsInviteFriendsOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer"
+            >
               {" "}
               <FaUserFriends size={25} className="mr-4" /> Invite Friends
+            </li>
+            <li className="text-xl py-4 flex hover:scale-105 hover:bg-slate-100 hover:rounded-2xl dark:hover:bg-transparent duration-300 cursor-pointer">
+              {" "}
+              <MdLogout size={25} className="mr-4" /> Logout
             </li>
           </ul>
         </nav>
@@ -181,6 +269,50 @@ export default function Navbar({ onSearch, cartItemsCount = 0, onCartClick }) {
           <span className="">{darkMode ? "Light Mode" : "Dark Mode"}</span>
         </button>
       </div>
+
+      {/* Favorites Sidebar */}
+      <Favorites 
+        favorites={favoritesState} 
+        isOpen={isFavoritesOpen} 
+        onClose={() => setIsFavoritesOpen(false)}
+        setFavorites={setFavoritesState}
+      />
+
+      {/* FAQ Sidebar */}
+      <FAQ 
+        isOpen={isFAQOpen} 
+        onClose={() => setIsFAQOpen(false)}
+      />
+
+      {/* Orders Sidebar */}
+      <Orders 
+        isOpen={isOrdersOpen} 
+        onClose={() => setIsOrdersOpen(false)}
+      />
+
+      {/* Wallet Sidebar */}
+      <Wallet 
+        isOpen={isWalletOpen} 
+        onClose={() => setIsWalletOpen(false)}
+      />
+
+      {/* Promotions Sidebar */}
+      <Promotions 
+        isOpen={isPromotionsOpen} 
+        onClose={() => setIsPromotionsOpen(false)}
+      />
+
+      {/* BestOne Sidebar */}
+      <BestOne 
+        isOpen={isBestOneOpen} 
+        onClose={() => setIsBestOneOpen(false)}
+      />
+
+      {/* InviteFriends Sidebar */}
+      <InviteFriends 
+        isOpen={isInviteFriendsOpen} 
+        onClose={() => setIsInviteFriendsOpen(false)}
+      />
     </div>
   );
 }

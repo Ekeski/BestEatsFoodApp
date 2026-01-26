@@ -2,9 +2,10 @@ import { data } from "../data/data.js";
 import { useState } from "react";
 import { useEffect } from "react";
 import { BsFillCartFill } from "react-icons/bs";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import Toast from "./Toast";
 
-export default function Food({ searchTerm, onAddToCart }) {
+export default function Food({ searchTerm, onAddToCart, favorites, setFavorites }) {
   const [foods, setFoods] = useState(data);
   const [activeCategory, setActiveCategory] = useState("all");
   const [activePrice, setActivePrice] = useState("all");
@@ -46,6 +47,23 @@ export default function Food({ searchTerm, onAddToCart }) {
         return foods.price === price;
       })
     );
+  };
+
+  // Handle adding item to favorites
+  const handleAddToFavorite = (item) => {
+    // Check if item is already in favorites
+    const isFavorite = favorites.some((fav) => fav.id === item.id);
+
+    if (isFavorite) {
+      // Remove from favorites
+      setFavorites(favorites.filter((fav) => fav.id !== item.id));
+    } else {
+      // Add to favorites
+      setFavorites([...favorites, item]);
+      // Show toast notification
+      setToastMessage("Added to favorite");
+      setShowToast(true);
+    }
   };
 
   return (
@@ -134,42 +152,96 @@ export default function Food({ searchTerm, onAddToCart }) {
 
       {/* Display Food Items */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-4 ">
-        {foods.map((foods, index) => (
-          <div
-            key={index}
-            className="border shadow-lg rounded-lg hover:scale-105 duration-300 cursor-pointer"
-          >
-            <img
-              src={foods.image}
-              alt={foods.name}
-              className="w-full h-[200px] object-cover rounded-t-lg"
-            />
-            {/* Food info container with name, cart icon, and price */}
-            <div className="flex items-center justify-between px-2 py-4">
-              {/* Food name */}
-              <p className="font-bold text-sm flex-1">{foods.name}</p>
-              
-              {/* Cart icon button - clickable to add to cart */}
-              <button
-                onClick={() => {
-                  onAddToCart(foods);
-                  // Show toast notification
-                  setToastMessage("Added to cart");
-                  setShowToast(true);
-                }}
-                className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full mx-2 transition duration-300 flex items-center justify-center"
-                title="Add to cart"
-              >
-                <BsFillCartFill size={16} />
-              </button>
-              
-              {/* Price badge */}
-              <span className="bg-orange-500 text-white p-1 rounded-full text-sm font-semibold">
-                {foods.price}
-              </span>
+        {foods.map((foods, index) => {
+          // Check if item is in favorites
+          const isFavorited = favorites.some((fav) => fav.id === foods.id);
+
+          return (
+            <div
+              key={index}
+              className="border shadow-lg rounded-lg hover:scale-105 duration-300 cursor-pointer relative"
+            >
+              {/* Image container with favorite icon on top left (mobile) / side by side (desktop) */}
+              <div className="relative">
+                <img
+                  src={foods.image}
+                  alt={foods.name}
+                  className="w-full h-[200px] object-cover rounded-t-lg"
+                />
+                {/* Icons container - positioned at top of image */}
+                <div className="absolute top-2 left-2 lg:hidden">
+                  {/* Favorite icon for mobile - top left */}
+                  <button
+                    onClick={() => handleAddToFavorite(foods)}
+                    className="bg-white rounded-full p-2 transition duration-300 hover:bg-gray-200"
+                    title="Add to favorite"
+                  >
+                    {isFavorited ? (
+                      <AiFillHeart size={18} className="text-red-600" />
+                    ) : (
+                      <AiOutlineHeart size={18} className="text-gray-600" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Cart icon for mobile - top right */}
+                <div className="absolute top-2 right-2 lg:hidden">
+                  <button
+                    onClick={() => {
+                      onAddToCart(foods);
+                      setToastMessage("Added to cart");
+                      setShowToast(true);
+                    }}
+                    className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition duration-300 flex items-center justify-center"
+                    title="Add to cart"
+                  >
+                    <BsFillCartFill size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Food info container with name, icons, and price */}
+              <div className="flex items-center justify-between px-2 py-4">
+                {/* Food name */}
+                <p className="font-bold text-sm flex-1">{foods.name}</p>
+
+                {/* Icons for desktop view - side by side */}
+                <div className="hidden lg:flex items-center gap-2">
+                  {/* Favorite icon for desktop */}
+                  <button
+                    onClick={() => handleAddToFavorite(foods)}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition duration-300"
+                    title="Add to favorite"
+                  >
+                    {isFavorited ? (
+                      <AiFillHeart size={16} className="text-red-600" />
+                    ) : (
+                      <AiOutlineHeart size={16} className="text-gray-600" />
+                    )}
+                  </button>
+
+                  {/* Cart icon button for desktop */}
+                  <button
+                    onClick={() => {
+                      onAddToCart(foods);
+                      setToastMessage("Added to cart");
+                      setShowToast(true);
+                    }}
+                    className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition duration-300 flex items-center justify-center"
+                    title="Add to cart"
+                  >
+                    <BsFillCartFill size={16} />
+                  </button>
+                </div>
+
+                {/* Price badge */}
+                <span className="bg-orange-500 text-white p-1 rounded-full text-sm font-semibold ml-2">
+                  {foods.price}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

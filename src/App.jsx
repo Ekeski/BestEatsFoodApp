@@ -16,6 +16,9 @@ function App() {
   // State to control cart visibility
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // State to manage favorite items
+  const [favorites, setFavorites] = useState([]);
+
   // Function to add item to cart
   const addToCart = (item) => {
     // Check if item already exists in cart
@@ -70,6 +73,7 @@ function App() {
         onSearch={setSearchTerm} 
         cartItemsCount={cartItems.length}
         onCartClick={() => setIsCartOpen(true)}
+        favorites={favorites}
       />
 
       {/* Hero section */}
@@ -79,7 +83,7 @@ function App() {
       <HeadlineCards onAddToCart={addToCart} />
 
       {/* Food menu section - added addToCart function */}
-      <Food searchTerm={searchTerm} onAddToCart={addToCart} />
+      <Food searchTerm={searchTerm} onAddToCart={addToCart} favorites={favorites} setFavorites={setFavorites} />
 
       {/* Category browse section */}
       <Category />

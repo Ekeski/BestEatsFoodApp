@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { AiOutlineClose, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import PaymentModal from "./PaymentModal";
+import Toast from "./Toast";
 
 export default function Cart({ cartItems, onRemoveItem, onUpdateQuantity, onRemoveAll, onClose }) {
   // State to manage payment modal visibility
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  // State to manage toast notification for remove all
+  const [showRemoveAllToast, setShowRemoveAllToast] = useState(false);
 
   // Calculate total price of all items in cart
   const calculateTotal = () => {
@@ -26,17 +30,25 @@ export default function Cart({ cartItems, onRemoveItem, onUpdateQuantity, onRemo
 
   // Handle removing all items from cart
   const handleRemoveAll = () => {
-    // Confirm before removing all items
-    if (window.confirm("Are you sure you want to remove all items from cart?")) {
-      // Call the onRemoveAll function to clear entire cart at once
-      onRemoveAll();
-    }
+    // Call the onRemoveAll function to clear entire cart at once
+    onRemoveAll();
+    // Show toast notification
+    setShowRemoveAllToast(true);
   };
 
   const totalAmount = calculateTotal();
 
   return (
     <>
+      {/* Remove All Toast Notification */}
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+        {showRemoveAllToast && (
+          <div className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in-out">
+            <p className="font-semibold">All items removed</p>
+          </div>
+        )}
+      </div>
+
       {/* Cart Overlay */}
       <div className="fixed inset-0 bg-black/50 z-30" onClick={onClose}></div>
 
